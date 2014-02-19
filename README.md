@@ -1,12 +1,12 @@
 WP Theme Helper
 ==================
-A helper for WordPress themes.  Provides helpers for theme settings, rendering files, handling paths, and creating shortcodes, among other things.
+A set of helper classes for WordPress theme development.  Provides helpers for theme settings, rendering files, handling paths, and creating shortcodes, among other things.
 
 Useage
 ------
 This project consists of multiple classes that each provide a set of functionality.  They can be used independently, or a WPThemeHelper object can be used as a manager for them.  These are the classes
 
-=== SettingHelper
+### SettingHelper
 Use this object to manage WordPress theme settings, providing a simple interface to set all basic theme settings through a single interface without needing to use the various different methods needed to set them in WordPress.  If set initially, it will also run them at the correct point in the WordPress initialization cycle.
 
 Example:
@@ -54,7 +54,7 @@ $settingsHelper = new TJM\WPThemeHelper\SettingHelper(Array(
 
 By default, the settings override the defaults of the helper.
 
-=== Renderer
+### Renderer
 Uses my [Buffer Manager](https://github.com/tobymackenzie/PHP-BufferManager) to render template files and pass data to them.
 
 Example:
@@ -77,10 +77,10 @@ echo $renderer->render('aboutBox.php', Array(
 
 If using a child theme, it will use the PathHelper to check both the child and parent theme for the file.  There is a `renderPiece()` method that runs `render()` for files in a 'pieces' folder.
 
-=== PathHelper
+### PathHelper
 Has a `getThemeFilePath($name, $container, $extension)` method that gets the path to a theme file, with child theme files overriding parent theme files.  `$name` is the file name, `$container` is an optional folder path the file is in, and `$extension` is an optional extension to add to the file name.
 
-=== ShortcodeHelper
+### ShortcodeHelper
 Simple helper for adding shortcodes.  You can add a single shortcode at a time, like:
 
 ```php
@@ -101,5 +101,5 @@ $shortcodeHelper->add(Array(
 
 Also has a `get($codes)` method to get the callables of one or more shortcodes if you want to use them elsewhere.
 
-=== DataHelper
+### DataHelper
 A simple class for storing data for later access, with `get($key)`, `set($key, $value)`, and `has($key)` methods.
