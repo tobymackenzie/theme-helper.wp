@@ -18,6 +18,7 @@ class SettingHelper{
 			,'custom-header'
 			,'editor-style'
 			,'html5'
+			,'i18n'
 			,'nav-menus'
 			,'post-formats'
 			,'post-thumbnails'
