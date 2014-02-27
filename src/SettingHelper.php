@@ -71,6 +71,10 @@ class SettingHelper{
 				,'comment-form'
 				,'search-form'
 			)
+			,'i18n'=> array(
+				'dir'=> 'languages'
+				,'domain'=> 'tjmbase'
+			)
 			,'nav-menus'=> Array(
 				'footer'=> __('Footer', 'tjmbase')
 				,'header'=> __('Header', 'tjmbase')
@@ -78,7 +82,6 @@ class SettingHelper{
 			,'post-formats'=> false
 			,'post-thumbnails'=> true
 			,'post-thumbnail-size'=> Array(625, 9999)
-			,'text-domain'=> 'tjmbase'
 			,'widget-areas'=> Array(
 				Array(
 					'name'=> __('Aside 1', 'tjmbase')
@@ -223,7 +226,6 @@ class SettingHelper{
 						$content_width = $setting;
 					}
 				break;
-
 				case 'custom-background':
 					//--!future BCBREAK for WP < 3.4
 					if(version_compare($wp_version, '3.4', '>=')){
@@ -244,6 +246,24 @@ class SettingHelper{
 					if($setting){
 						add_editor_style();
 					}
+				break;
+				case 'i18n':
+				case 'text-domain': //-# for BC
+					if(is_string($setting)){
+						$domain = $setting;
+					}else{
+						$domain = (isset($setting['domain']))
+							? $setting['domain']
+							: 'tjmbase'
+						;
+						if(isset($setting['dir'])){
+							$dir = $setting['dir'];
+						}
+					}
+					if(!isset($dir)){
+						$dir = 'languages';
+					}
+					load_theme_textdomain($domain, get_template_directory() . DIRECTORY_SEPARATOR . $dir);
 				break;
 				case 'nav-menus':
 					if(is_array($setting)){
@@ -273,9 +293,6 @@ class SettingHelper{
 							register_sidebar($sidebar);
 						}
 					}
-				break;
-				case 'text-domain':
-					load_theme_textdomain($setting, get_template_directory() . DIRECTORY_SEPARATOR . 'languages');
 				break;
 				default:
 					add_theme_support($name, $setting);
