@@ -276,11 +276,9 @@ class SettingHelper{
 					}
 				break;
 				case 'post-thumbnails':
-					//-# settings must be an array or WordPress balks
-					if(!is_array($setting)){
-						$setting = Array();
+					if($setting){
+						add_theme_support('post-thumbnails');
 					}
-					add_theme_support('post-thumbnails', $setting);
 				break;
 				case 'post-thumbnail-size':
 					if(is_array($setting)){
