@@ -19,6 +19,7 @@ class SettingHelper{
 			,'editor-style'
 			,'html5'
 			,'i18n'
+			,'image-size'
 			,'nav-menus'
 			,'post-formats'
 			,'post-thumbnails'
@@ -76,6 +77,16 @@ class SettingHelper{
 				'dir'=> 'languages'
 				,'domain'=> 'tjmbase'
 			)
+			// ,'image-size'=> array(
+			// 	'category-thumb'=> Array(
+			// 		300
+			// 		,9999
+			// 	)
+			// 	,'small'=> Array(
+			// 		100
+			// 		,9999
+			// 	)
+			// )
 			,'nav-menus'=> Array(
 				'footer'=> __('Footer', 'tjmbase')
 				,'header'=> __('Header', 'tjmbase')
@@ -265,6 +276,19 @@ class SettingHelper{
 						$dir = 'languages';
 					}
 					load_theme_textdomain($domain, get_template_directory() . DIRECTORY_SEPARATOR . $dir);
+				break;
+				case 'image-size':
+					if(is_array($setting)){
+						//-# dirty test to see if it is an associative array
+						if(!isset($setting[0])){
+							foreach($setting as $sizeName=> $arguments){
+								array_unshift($arguments, $sizeName);
+								call_user_func_array('add_image_size', $arguments);
+							}
+						}else{
+							call_user_func_array('add_image_size', $setting);
+						}
+					}
 				break;
 				case 'nav-menus':
 					if(is_array($setting)){
