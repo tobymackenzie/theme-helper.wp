@@ -72,8 +72,8 @@ class SettingHelper{
 				,'search-form'
 			)
 			,'nav-menus'=> Array(
-				'footer'=> 'Footer'
-				,'header'=> 'Header'
+				'footer'=> __('Footer', 'tjmbase')
+				,'header'=> __('Header', 'tjmbase')
 			)
 			,'post-formats'=> false
 			,'post-thumbnails'=> true
@@ -81,7 +81,7 @@ class SettingHelper{
 			,'text-domain'=> 'tjmbase'
 			,'widget-areas'=> Array(
 				Array(
-					'name'=> 'Aside 1'
+					'name'=> __('Aside 1', 'tjmbase')
 					,'id'=> 'aside-1'
 					,'before_widget'=> '<div id="%1$s" class="widget %2$s">'
 					,'after_widget'=> '</div>'
@@ -89,7 +89,7 @@ class SettingHelper{
 					,'after_title'=> '</h3>'
 				)
 				,Array(
-					'name'=> 'Aside 2'
+					'name'=> __('Aside 2', 'tjmbase')
 					,'id'=> 'aside-2'
 					,'before_widget'=> '<div id="%1$s" class="widget %2$s">'
 					,'after_widget'=> '</div>'
@@ -97,7 +97,7 @@ class SettingHelper{
 					,'after_title'=> '</h3>'
 				)
 				,Array(
-					'name'=> 'Header Widgets'
+					'name'=> __('Header Widgets', 'tjmbase')
 					,'id'=> 'header-widget-area'
 					,'before_widget'=> '<div id="%1$s" class="widget %2$s">'
 					,'after_widget'=> '</div>'
@@ -105,7 +105,7 @@ class SettingHelper{
 					,'after_title'=> '</h3>'
 				)
 				,Array(
-					'name'=> 'Footer Widgets'
+					'name'=> __('Footer Widgets', 'tjmbase')
 					,'id'=> 'footer-widget-area'
 					,'before_widget'=> '<div id="%1$s" class="widget %2$s">'
 					,'after_widget'=> '</div>'
@@ -270,12 +270,6 @@ class SettingHelper{
 				case 'widget-areas':
 					if(is_array($setting)){
 						foreach($setting as $sidebar){
-							if(isset($sidebar['name'])){
-								$sidebar['name'] = __($sidebar['name'], 'tjmbase');
-							}
-							if(isset($sidebar['description'])){
-								$sidebar['description'] = __($sidebar['description'], 'tjmbase');
-							}
 							register_sidebar($sidebar);
 						}
 					}
