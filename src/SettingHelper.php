@@ -17,6 +17,7 @@ class SettingHelper{
 			,'custom-background'
 			,'custom-header'
 			,'editor-style'
+			,'featured-content'
 			,'html5'
 			,'i18n'
 			,'image-size'
@@ -28,6 +29,7 @@ class SettingHelper{
 		)
 		,'widgets_init'=> Array(
 			'widget-areas'
+			,'widgets'
 		)
 	);
 
@@ -128,6 +130,10 @@ class SettingHelper{
 					,'after_title'=> '</h3>'
 				)
 			)
+			// ,'widgets'=> Array(
+			// 	'WidgetOne'
+			// 	,'WidgetTwo'
+			// )
 		), $settings);
 		return $settings;
 	}
@@ -315,6 +321,15 @@ class SettingHelper{
 						foreach($setting as $sidebar){
 							register_sidebar($sidebar);
 						}
+					}
+				break;
+				case 'widgets':
+					if(is_array($setting)){
+						foreach($setting as $widget){
+							register_widget($widget);
+						}
+					}else{
+						register_widget($setting);
 					}
 				break;
 				default:
