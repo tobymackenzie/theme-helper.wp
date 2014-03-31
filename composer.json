@@ -1,5 +1,6 @@
 {
 	"name": "tjm/wpthemehelper"
+	,"description": "Helper classes for WordPress theme development"
 	,"authors": [
 		{
 			"name": "Toby Mackenzie"
