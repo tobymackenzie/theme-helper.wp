@@ -9,7 +9,7 @@
 	]
 	,"autoload": {
 		"psr-4": {
-			"TJM\\WPThemeHelper": "src"
+			"TJM\\WPThemeHelper\\": "src"
 		}
 	}
 	,"require": {
