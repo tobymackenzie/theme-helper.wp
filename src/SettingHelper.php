@@ -40,12 +40,6 @@ class SettingHelper{
 	protected $settings;
 
 	/*
-	Attribute: renderer
-	Renderer instance or equivalent for use in callbacks that render output.
-	*/
-	public $renderer; //-# must be public for access in 'custom-header' callbacks
-
-	/*
 	Method: getBaseDefaults
 	Get the default settings.
 	Parameters:
@@ -176,7 +170,6 @@ class SettingHelper{
 		opts(Array):
 			overrideDefaults(boolean): whether or not passed in settings should override defaults.  True by default
 			settings(Array): Array of settings use.  Will override defaults unless 'overrideDefaults' is false
-			renderer(Renderer): renderer object to use for rendering
 	*/
 	public function __construct($opts = Array()){
 		if(isset($opts['settings']) && $opts['settings']){
@@ -188,11 +181,6 @@ class SettingHelper{
 		}else{
 			$this->settings = $this->getDefaults();
 		}
-		$this->renderer =
-			(isset($opts['renderer']))
-			? $opts['renderer']
-			: new Renderer()
-		;
 
 		//--add actions to apply settings
 		//---store this for closure
