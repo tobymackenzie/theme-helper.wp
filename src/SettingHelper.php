@@ -345,7 +345,7 @@ class SettingHelper{
 
 	/*
 	Method: set
-	Set a WordPress setting in the settings array by key.  This will set the setting in the settings array, but will no
+	Set a WordPress setting in the settings array by key.  This will set the setting in the settings array, but will not actually apply the settings.
 	Parameters:
 		key(String): key of setting as set in $this->settings
 		value(mixed): value to assign to settings
