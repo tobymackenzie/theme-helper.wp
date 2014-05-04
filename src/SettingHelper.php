@@ -47,14 +47,13 @@ class SettingHelper{
 
 	/*
 	Method: getBaseDefaults
-	Get the default settings, minus callbacks (because they require a reference to $this.  If an array is passed in, passed array will override set keys.  If callable passed in, callable will define settings.
+	Get the default settings.
 	Parameters:
 		settings(Array|callable): settings to override defaults with.  If a function, will call the function, its return being an array of settings to override the defaults with.
-		settingsHelper(SettingHelper): an instance of this class, used to pass into $settings if it is a callable so the function can have a reference to it.
 	Return: (Array) settings
 	*/
-	static public function getBaseDefaults($settings = Array(), $settingsHelper = null){
-		$defaults = Array(
+	static public function getBaseDefaults(){
+		return Array(
 			'automatic-feed-links'=> true
 			,'content-width'=> 625
 			,'custom-background'=> Array(
@@ -136,15 +135,29 @@ class SettingHelper{
 			// 	,'WidgetTwo'
 			// )
 		);
-		if(is_callable($settings)){
-			$settings = call_user_func($settings, $defaults, $settingsHelper);
-		}elseif(is_array($settings)){
-			$settings = array_merge($defaults, $settings);
-		}else{
-			$settings = $defaults;
+	}
+
+	/*
+	Method: buildSettingsArray()
+	Each argument is a settings collection or a callable that is modifies the currently built setting collection.  Loops through all arguments and merges them into a single settings array.
+	Paremeters:
+		args(mixed):
+			(Array): Array of settings
+			(callable): modifies settings array built to that point.
+	*/
+	static public function buildSettingsArray(){
+		$args = func_get_args();
+		$settings = Array();
+		foreach($args as $i=> $arg){
+			if(is_array($arg)){
+				$settings = array_merge($settings, $arg);
+			}elseif(is_callable($arg)){
+				call_user_func($arg, &$settings, $args);
+			}
 		}
 		return $settings;
 	}
+
 	/*
 	Method: getDefaults
 	Get the default settings.  Simply runs `getBaseDefaults()`, but passing in $this as the second parameter.
@@ -153,7 +166,8 @@ class SettingHelper{
 	Return: (Array) settings
 	*/
 	public function getDefaults($settings = Array()){
-		return self::getBaseDefaults($settings, $this);
+		$defaults = self::buildSettingsArray(self::getBaseDefaults(), $settings);
+		return $defaults;
 	}
 
 	/*
