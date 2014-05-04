@@ -41,23 +41,24 @@ class SettingHelper{
 
 	/*
 	Attribute: renderer
-	Renderer instance or equivalent for use in default 'custom-header' callbacks.
+	Renderer instance or equivalent for use in callbacks that render output.
 	*/
 	public $renderer; //-# must be public for access in 'custom-header' callbacks
 
 	/*
 	Method: getBaseDefaults
-	Get the default settings, minus callbacks (because they require a reference to $this.  If an array is passed in, passed array will override set keys.
+	Get the default settings, minus callbacks (because they require a reference to $this.  If an array is passed in, passed array will override set keys.  If callable passed in, callable will define settings.
 	Parameters:
-		settings(Array): settings to override defaults with
+		settings(Array|callable): settings to override defaults with.  If a function, will call the function, its return being an array of settings to override the defaults with.
+		settingsHelper(SettingHelper): an instance of this class, used to pass into $settings if it is a callable so the function can have a reference to it.
 	Return: (Array) settings
 	*/
-	static public function getBaseDefaults($settings = Array()){
-		$settings = array_merge(Array(
+	static public function getBaseDefaults($settings = Array(), $settingsHelper = null){
+		$defaults = Array(
 			'automatic-feed-links'=> true
 			,'content-width'=> 625
 			,'custom-background'=> Array(
-				'background-color'=> 'fff'
+				'background-color'=> 'ffffff'
 			)
 			,'custom-header'=> Array(
 				'default-image'=> ''
@@ -134,36 +135,25 @@ class SettingHelper{
 			// 	'WidgetOne'
 			// 	,'WidgetTwo'
 			// )
-		), $settings);
+		);
+		if(is_callable($settings)){
+			$settings = call_user_func($settings, $defaults, $settingsHelper);
+		}elseif(is_array($settings)){
+			$settings = array_merge($defaults, $settings);
+		}else{
+			$settings = $defaults;
+		}
 		return $settings;
 	}
 	/*
 	Method: getDefaults
-	Get the default settings, with base settings plus callbacks requiring a reference to $this.  If an array is passed in, passed array will override set keys.  Because of the order things are done in, 'custom-header' settings can be overridden without losing default rendering callbacks.
+	Get the default settings.  Simply runs `getBaseDefaults()`, but passing in $this as the second parameter.
 	Parameters:
 		settings(Array): settings to override defaults with
 	Return: (Array) settings
 	*/
 	public function getDefaults($settings = Array()){
-		$settingHelper = $this;
-		$settings = self::getBaseDefaults($settings);
-		if(isset($settings['custom-header'])){
-			$settings['custom-header'] = array_merge(Array(
-				'admin-head-callback'=> function() use($settingHelper){
-					echo $settingHelper->renderer->renderPiece('adminHeaderStyles');
-				}
-				,'admin-preview-callback'=> function() use($settingHelper){
-					echo $settingHelper->renderer->renderPiece('adminHeader');
-				}
-				,'wp-head-callback'=> function() use($settingHelper){
-					$textColor = get_header_textcolor();
-					echo $settingHelper->renderer->renderPiece('headerStyles', Array(
-						'textColor'=> $textColor
-					));
-				}
-			), $settings['custom-header']);
-		}
-		return $settings;
+		return self::getBaseDefaults($settings, $this);
 	}
 
 	/*
@@ -176,7 +166,7 @@ class SettingHelper{
 	*/
 	public function __construct($opts = Array()){
 		if(isset($opts['settings']) && $opts['settings']){
-			if(isset($opts['overrideDefaults']) && !$opts['overrideDefaults']){
+			if(is_array($opts['settings']) && isset($opts['overrideDefaults']) && !$opts['overrideDefaults']){
 				$this->settings = $opts['settings'];
 			}else{
 				$this->settings = $this->getDefaults($opts['settings']);
