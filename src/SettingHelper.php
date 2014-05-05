@@ -279,7 +279,12 @@ class SettingHelper{
 					if(!isset($dir)){
 						$dir = 'languages';
 					}
-					load_theme_textdomain($domain, get_template_directory() . DIRECTORY_SEPARATOR . $dir);
+					if(substr($dir, 0, 1) !== DIRECTORY_SEPARATOR){
+						$dir = PathHelper::getThemeFilePath($dir);
+					}
+					if($domain && $dir){
+						load_theme_textdomain($domain, $dir);
+					}
 				break;
 				case 'image-size':
 					if(is_array($setting)){
