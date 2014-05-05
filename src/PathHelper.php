@@ -19,7 +19,7 @@ class PathHelper{
 	Return:
 		(String): path to file that exists, or null.
 	*/
-	public function getThemeFilePath($name, $container = '', $extension = ''){
+	static public function getThemeFilePath($name, $container = '', $extension = ''){
 		if(substr($name, 0, 1) == '/'){
 			$templatePath = $name;
 		}else{
