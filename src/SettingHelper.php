@@ -138,6 +138,7 @@ class SettingHelper{
 		args(mixed):
 			(Array): Array of settings
 			(callable): modifies settings array built to that point.
+			(String): path to json file containing settings collection.  Will use `file_get_contents` and convert it to an associative array.
 	*/
 	static public function buildSettingsArray(){
 		$args = func_get_args();
@@ -145,6 +146,11 @@ class SettingHelper{
 		foreach($args as $i=> $arg){
 			if(is_array($arg)){
 				$settings = array_merge($settings, $arg);
+			}elseif(is_string($arg)){
+				if(file_exists($arg)){
+					$decodedSettings = json_decode(file_get_contents($arg), true);
+					$settings = array_merge($settings, $decodedSettings);
+				}
 			}elseif(is_callable($arg)){
 				call_user_func($arg, &$settings, $args);
 			}
