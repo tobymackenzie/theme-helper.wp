@@ -152,7 +152,7 @@ class SettingHelper{
 					$settings = array_merge($settings, $decodedSettings);
 				}
 			}elseif(is_callable($arg)){
-				call_user_func($arg, &$settings, $args);
+				call_user_func_array($arg, Array(&$settings, $args));
 			}
 		}
 		return $settings;
