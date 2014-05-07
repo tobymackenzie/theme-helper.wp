@@ -46,8 +46,7 @@ class WPThemeHelper{
 			}else{
 				$settings = (isset($opts['settings'])) ? $opts['settings'] : null;
 				$this->settings = new SettingHelper(Array(
-					'renderer'=> $this->renderer
-					,'settings'=> $settings
+					'settings'=> $settings
 				));
 			}
 		}
