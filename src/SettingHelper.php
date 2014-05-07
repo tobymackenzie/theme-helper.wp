@@ -149,8 +149,12 @@ class SettingHelper{
 			if(is_array($arg)){
 				$settings = array_merge($settings, $arg);
 			}elseif(is_string($arg)){
-				if(file_exists($arg)){
-					$decodedSettings = json_decode(file_get_contents($arg), true);
+				$file = (substr($arg, 0, 1) === '/')
+					? $arg
+					: PathHelper::getThemeFilePath($arg)
+				;
+				if(file_exists($file)){
+					$decodedSettings = json_decode(file_get_contents($file), true);
 					$settings = array_merge($settings, $decodedSettings);
 				}
 			}elseif(is_callable($arg)){
