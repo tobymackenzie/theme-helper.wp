@@ -8,30 +8,20 @@ namespace TJM\WPThemeHelper;
 class SettingHelper{
 	/*
 	Attribute: actions
-	Actions and their methods and settings to hook into for applying settings
+	Actions and their methods and settings to hook into for applying settings.  Anything not defined here is run at 'after_setup_theme', so we don't have to maintain a list of anything but the ones that should be run later.
 	*/
 	protected $actions = Array(
-		'after_setup_theme'=> Array(
-			'automatic-feed-links'
-			,'content-width'
-			,'custom-background'
-			,'custom-header'
-			,'editor-style'
-			,'featured-content'
-			,'html5'
-			,'i18n'
-			,'image-size'
-			,'nav-menus'
-			,'post-formats'
-			,'post-thumbnails'
-			,'post-thumbnail-size'
-			,'text-domain'
-		)
-		,'widgets_init'=> Array(
+		'widgets_init'=> Array(
 			'widget-areas'
 			,'widgets'
 		)
 	);
+
+	/*
+	Attribute: settingsWithDefinedActions
+	Used internally to store which settings are to be applied for a special action.
+	*/
+	protected $settingsWithDefinedActions;
 
 	/*
 	Attribute: settings
@@ -200,6 +190,15 @@ class SettingHelper{
 			$this->set($this->getDefaults());
 		}
 
+		//--determine which settings have actions defined, for use by `applySettingsForDefaultAction()`
+		foreach($this->actions as $actionSettings){
+			foreach($actionSettings as $setting){
+				$this->settingsWithDefinedActions[] = $setting;
+			}
+		}
+
+		//--push all non-deferred settings into setting
+
 		//--add actions to apply settings
 		$_this = $this; //-# for use in closures
 		//---add_action for each defined action
@@ -208,9 +207,9 @@ class SettingHelper{
 				$_this->applySettingsForAction($action);
 			});
 		}
-		//---fallback action for catching unset settings.  would like a better way to handle this, since most settings should be applied during 'after_theme_setup'.
-		add_action('wp_loaded', function() use ($_this){
-			$_this->applyUnappliedSettings();
+		//---apply settings for default action
+		add_action('after_setup_theme', function() use ($_this){
+			$_this->applySettingsForDefaultAction();
 		});
 	}
 
@@ -226,6 +225,18 @@ class SettingHelper{
 			}
 		}
 		return $this;
+	}
+
+	/*
+	Method: applySettingsForDefaultAction
+	Apply all settings that aren't marked for being run at a special action.  These are run during the 'after_setup_theme' action.
+	*/
+	public function applySettingsForDefaultAction(){
+		foreach($this->unappliedSettings as $setting){
+			if(!in_array($setting, $this->settingsWithDefinedActions)){
+				$this->apply($setting);
+			}
+		}
 	}
 
 	/*
