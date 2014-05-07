@@ -180,12 +180,12 @@ class SettingHelper{
 	public function __construct($opts = Array()){
 		if(isset($opts['settings']) && $opts['settings']){
 			if(is_array($opts['settings']) && isset($opts['overrideDefaults']) && !$opts['overrideDefaults']){
-				$this->settings = $opts['settings'];
+				$this->set($opts['settings']);
 			}else{
-				$this->settings = $this->getDefaults($opts['settings']);
+				$this->set($this->getDefaults($opts['settings']));
 			}
 		}else{
-			$this->settings = $this->getDefaults();
+			$this->set($this->getDefaults());
 		}
 
 		//--add actions to apply settings
@@ -360,11 +360,17 @@ class SettingHelper{
 	Method: set
 	Set a WordPress setting in the settings array by key.  This will set the setting in the settings array, but will not actually apply the settings.
 	Parameters:
-		key(String): key of setting as set in $this->settings
+		keyOrMap(String|Array): key of setting as set in $this->settings.  If an array, will run set for each key value pair in array.
 		value(mixed): value to assign to settings
 	*/
-	public function set($key, $value){
-		$this->settings[$key] = $value;
+	public function set($keyOrMap, $value = null){
+		if(is_array($keyOrMap)){
+			foreach($keyOrMap as $key=> $value){
+				$this->set($key, $value);
+			}
+		}else{
+			$this->settings[$keyOrMap] = $value;
+		}
 		return $this;
 	}
 }
