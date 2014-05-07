@@ -23,21 +23,63 @@ class PathHelper{
 		if(substr($name, 0, 1) == '/'){
 			$templatePath = $name;
 		}else{
-			$relativePath = DIRECTORY_SEPARATOR;
-			if($container != ''){
-				$relativePath .= $container . DIRECTORY_SEPARATOR;
-			}
-			$relativePath .= $name;
-			if($extension != ''){
-				$relativePath .= ".{$extension}";
-			}
-			$templatePath = get_stylesheet_directory() . $relativePath;
+			$relativePath = self::getRelativePath($name, $container, $extension);
+			$templatePath = self::getChildThemeFilePath($name, $container, $extension);
 			//--
 			if(!file_exists($templatePath)){
-				$templatePath = get_template_directory() . $relativePath;
+				$templatePath = self::getParentThemeFilePath($name, $container, $extension);
 			}
 		}
 		return (file_exists($templatePath)) ? $templatePath : null;
 	}
 
+	/*
+	Method: getChildThemeFilePath
+	Get the file path to a file inside a child theme.
+	Parameters:
+		{see `getRelativePath()`}
+	Return:
+		(String): path to file.
+	*/
+	static public function getChildThemeFilePath($name, $container = '', $extension = ''){
+		return get_stylesheet_directory() . self::getRelativePath($name, $container, $extension);
+	}
+
+	/*
+	Method: getParentThemeFilePath
+	Get the file path to a file inside a parent theme.
+	Parameters:
+		{see `getRelativePath()`}
+	Return:
+		(String): path to file.
+	*/
+	static public function getParentThemeFilePath($name, $container = '', $extension = ''){
+		return get_template_directory() . self::getRelativePath($name, $container, $extension);
+	}
+
+	/*=====
+	==helpers
+	=====*/
+
+	/*
+	Method: getRelativePath
+	Get relative file path for three pieces: container, name, and extension.
+	Parameters:
+		name(String): name of file
+		container(String): containing folder(s)
+		extension(String): optional file extension to add to name
+	Return:
+		(String): relative file name constructed from parameters
+	*/
+	static public function getRelativePath($name, $container = '', $extension = ''){
+		$relativePath = DIRECTORY_SEPARATOR;
+		if($container != ''){
+			$relativePath .= $container . DIRECTORY_SEPARATOR;
+		}
+		$relativePath .= $name;
+		if($extension != ''){
+			$relativePath .= ".{$extension}";
+		}
+		return $relativePath;
+	}
 }
