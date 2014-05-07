@@ -40,6 +40,18 @@ class SettingHelper{
 	protected $settings;
 
 	/*
+	Attribute: appliedSettings
+	Array of setting names that have been applied.  `apply()` moves items from $unappliedSettings to this array.
+	*/
+	protected $appliedSettings;
+
+	/*
+	Attribute: unappliedSettings
+	Array of setting names that have not yet been applied.  `set()` adds items to this array
+	*/
+	protected $unappliedSettings;
+
+	/*
 	Method: getBaseDefaults
 	Get the default settings.
 	Parameters:
@@ -189,14 +201,17 @@ class SettingHelper{
 		}
 
 		//--add actions to apply settings
-		//---store this for closure
-		$_this = $this;
+		$_this = $this; //-# for use in closures
 		//---add_action for each defined action
 		foreach($this->actions as $action=> $settings){
 			add_action($action, function() use ($_this, $action){
 				$_this->applySettingsForAction($action);
 			});
 		}
+		//---fallback action for catching unset settings.  would like a better way to handle this, since most settings should be applied during 'after_theme_setup'.
+		add_action('wp_loaded', function() use ($_this){
+			$_this->applyUnappliedSettings();
+		});
 	}
 
 	/*
@@ -209,6 +224,17 @@ class SettingHelper{
 			foreach($settings as $setting){
 				$this->apply($setting);
 			}
+		}
+		return $this;
+	}
+
+	/*
+	Method: applyUnappliedSettings
+	Apply all settings remaining in $this->unappliedSettings
+	*/
+	public function applyUnappliedSettings(){
+		foreach($this->unappliedSettings as $setting){
+			$this->apply($setting);
 		}
 		return $this;
 	}
@@ -339,6 +365,13 @@ class SettingHelper{
 					add_theme_support($name, $setting);
 				break;
 			}
+
+			//--move from unapplied to applied
+			$this->appliedSettings[] = $name;
+			$unappliedIndex = array_search($name, $this->unappliedSettings);
+			if($unappliedIndex !== false){
+				array_splice($this->unappliedSettings, $unappliedIndex, 1);
+			}
 		}
 		return $this;
 	}
@@ -370,6 +403,7 @@ class SettingHelper{
 			}
 		}else{
 			$this->settings[$keyOrMap] = $value;
+			$this->unappliedSettings[] = $keyOrMap;
 		}
 		return $this;
 	}
