@@ -8,6 +8,7 @@
 			,"homepage": "http://www.tobymackenzie.com"
 		}
 	]
+	,"license": "BSD-3-Clause"
 	,"autoload": {
 		"psr-4": {
 			"TJM\\WPThemeHelper\\": "src"
