@@ -1,11 +1,11 @@
 <?php
 /*
-Class: WPConfigHelper
+Class: ConfigHelper
 Helps with working with wp-config.  Done statically to not require instantiation.
 */
 namespace TJM\WPThemeHelper;
 
-class WPConfigHelper{
+class ConfigHelper{
 	/*
 	Method: init
 	Init config helper.
@@ -149,7 +149,7 @@ class WPConfigHelper{
 
 	/*
 	Property: vars
-	Variables used internally by WPConfigHelper.
+	Variables used internally by ConfigHelper.
 	*/
 	protected static $vars;
 	public static function getVar($name){
@@ -198,7 +198,7 @@ class WPConfigHelper{
 
 	- constants: '{{CONSTANT_NAME}}'
 	- globals: '{{globalVariableName}}'
-	- vars: '{{WPConfigHelper::vars.varName}}'
+	- vars: '{{ConfigHelper::vars.varName}}'
 	Arguments:
 		string(String): string to replace tokens in
 	Returns:
@@ -211,7 +211,7 @@ class WPConfigHelper{
 
 		foreach($names as $key=> $name){
 			$token = $tokens[$key];
-			if(substr($name, 0, 21) === 'WPConfigHelper::vars.'){
+			if(substr($name, 0, 21) === 'ConfigHelper::vars.'){
 				$value = self::getVar(substr($name, 21));
 			}elseif(substr($name, 0, 1) === '$'){
 				$value = $GLOBALS[$name];
