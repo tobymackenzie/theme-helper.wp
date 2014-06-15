@@ -211,8 +211,8 @@ class ConfigHelper{
 
 		foreach($names as $key=> $name){
 			$token = $tokens[$key];
-			if(substr($name, 0, 21) === 'ConfigHelper::vars.'){
-				$value = self::getVar(substr($name, 21));
+			if(substr($name, 0, 19) === 'ConfigHelper::vars.'){
+				$value = self::getVar(substr($name, 19));
 			}elseif(substr($name, 0, 1) === '$'){
 				$value = $GLOBALS[$name];
 			}else{
