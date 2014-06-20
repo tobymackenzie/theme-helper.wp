@@ -77,7 +77,7 @@ class Renderer{
 		data(Array): {see $this->outputTemplate()}
 	*/
 	public function renderPiece($templateName = 'skeleton.php', $data = Array()){
-		$templatePath = $this->pathManager->getThemeFilePath($templateName, 'pieces', 'php');
+		$templatePath = substr($this->pathManager->getRelativePath($templateName, 'pieces', 'php'), 1);
 		return $this->renderTemplate($templatePath, $data);
 	}
 
