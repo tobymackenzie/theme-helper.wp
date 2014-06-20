@@ -8,6 +8,9 @@ namespace TJM\WPThemeHelper;
 use TJM\Component\BufferManager\BufferManager;
 
 class Renderer{
+	protected $bufferManager;
+	protected $pathManager;
+
 	/*
 	Method: __construct
 	Parameters:
@@ -28,8 +31,15 @@ class Renderer{
 		;
 	}
 
-	protected $bufferManager;
-	protected $pathManager;
+	/*=====
+	==render
+	=====*/
+
+	/*
+	Property: renderStack
+	Stack of templates currently being rendered.  Used by renderParent to be able to render the parent of the currently rendering template.
+	*/
+	protected $renderStack = Array();
 
 	/*
 	Method: getTemplateContent
@@ -70,6 +80,26 @@ class Renderer{
 	}
 
 	/*
+	Method: renderParent
+	Renders the parent theme template file.  Useful if a child theme overrides a template but you still want to be able to render the parent version, such as from within the child template.
+	Parameters:
+		templateFile(String): {see $this->outputTemplate()}
+		data(Array): {see $this->outputTemplate()}
+	*/
+	public function renderParent($templateFile = null, $data = null){
+		if($templateFile === null){
+			$stackData = $this->renderStack[count($this->renderStack) - 1];
+			$templateFile = $stackData['template'];
+			$data = $stackData['data'];
+		}
+		if($data === null){
+			$data = Array();
+		}
+		$templatePath = $this->pathManager->getParentThemeFilePath($templateFile);
+		return $this->renderTemplate($templatePath, $data);
+	}
+
+	/*
 	Method: renderPiece
 	Virtual alias for $this->renderTemplate(), but setting template file to be in pieces folder
 	Parameters:
@@ -89,7 +119,13 @@ class Renderer{
 		data(Array): {see $this->outputTemplate()}
 	*/
 	public function renderTemplate($templateFile, $data = Array()){
-		return $this->getTemplateContent($templateFile, $data);
+		$this->renderStack[] = Array(
+			'template'=> $templateFile
+			,'data'=> $data
+		);
+		$return = $this->getTemplateContent($templateFile, $data);
+		array_pop($this->renderStack);
+		return $return;
 	}
 
 	/*
