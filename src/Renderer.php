@@ -127,23 +127,4 @@ class Renderer{
 		array_pop($this->renderStack);
 		return $return;
 	}
-
-	/*
-	Method: outputCommentPiece
-	Special version of $this->renderPiece to be passed as a callback to Wordpress's 'wp_list_comments' function.
-	See: http://codex.wordpress.org/Function_Reference/wp_list_comments
-	Parameters:
-		comment(Comment): comment object holding comment data
-		args(Array): arguments passed to wp_list_comments
-		depth(Integer): how deep to the comment is in nesting
-	*/
-	public function outputCommentPiece($comment, $args, $depth){
-		$data = Array(
-			'args'=> $args
-			,'comment'=> $comment
-			,'depth'=> $depth
-		);
-		$output = $this->renderPiece('comment', $data);
-		echo $output;
-	}
 }
