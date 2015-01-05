@@ -92,6 +92,7 @@ class SettingHelper{
 			,'post-formats'=> false
 			,'post-thumbnails'=> true
 			,'post-thumbnail-size'=> Array(625, 9999)
+			,'title-tag'=> true
 			,'widget-areas'=> Array(
 				Array(
 					'name'=> __('Aside 1', 'tjmbase')
@@ -358,6 +359,11 @@ class SettingHelper{
 				case 'post-thumbnail-size':
 					if(is_array($setting)){
 						call_user_func_array('set_post_thumbnail_size', $setting);
+					}
+				break;
+				case 'title-tag':
+					if($setting){
+						add_theme_support('post-thumbnails');
 					}
 				break;
 				case 'widget-areas':
