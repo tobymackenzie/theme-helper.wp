@@ -183,7 +183,9 @@ class ConfigHelper{
 			self::$vars = self::getDefaultVars();
 		}
 		foreach(func_get_args() as $arg){
-			self::$vars = array_merge(self::$vars, $arg);
+			foreach($arg as $key=> $value){
+				self::$vars[$key] = self::fillTokens($value);
+			}
 		}
 		return self::$vars;
 	}
