@@ -41,7 +41,7 @@ class WPThemeHelper{
 			&& !$opts['settings']
 			&& !is_array($opts['settings'])
 		)){ //-# don't create settings helper at all if settings is set and falsey (not including an empty array)
-			if(is_object($opts['settings']) && !is_callable($opts['settings'])){
+			if(isset($opts['settings']) && is_object($opts['settings']) && !is_callable($opts['settings'])){
 				$this->settings = $opts['settings'];
 			}else{
 				$settings = (isset($opts['settings'])) ? $opts['settings'] : null;
