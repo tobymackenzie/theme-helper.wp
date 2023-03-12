@@ -11,6 +11,9 @@ class ConfigHelper{
 	Init config helper.
 	*/
 	public static function init($opts = Array()){
+		if(!is_string($opts) && is_callable($opts)){
+			$opts = $opts();
+		}
 		self::loadVars((isset($opts['vars'])) ? $opts['vars'] : Array());
 		self::initConstants($opts);
 		self::initGlobals($opts);
