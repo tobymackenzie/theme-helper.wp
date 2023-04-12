@@ -36,7 +36,7 @@ class ConfigHelper{
 	}
 	protected static function postInit($opts = Array()){
 		//--debug stuff
-		if(WP_DEBUG){
+		if(defined('WP_DEBUG') && constant('WP_DEBUG')){
 			// error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_WARNING);
 			error_reporting(E_ALL);
 			ini_set('display_errors', 1);
