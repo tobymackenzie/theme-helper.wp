@@ -5,7 +5,7 @@ Handles rendering of files
 */
 namespace TJM\WPThemeHelper;
 
-use TJM\Component\BufferManager\BufferManager;
+use TJM\BufferManager;
 
 class Renderer{
 	protected $bufferManager;

@@ -5,7 +5,7 @@ Used to contain basic theme functionality so it won't pollute the global namespa
 */
 namespace TJM\WPThemeHelper;
 
-use TJM\Component\BufferManager\BufferManager;
+use TJM\BufferManager;
 
 class WPThemeHelper{
 	/*
